@@ -69,12 +69,11 @@ putting some data to play with in the database
 ### basics
 ``` clojure 
 ;; attribute existence
-;; find every documents that have a :father attribute
+;; find every documents that have a `:father` attribute
 (q '{:find [x]
      :where [[x :father]]})
-```
 ;=> #{[:clement] [:jean-pierre] [:mathilde] [:nicolas] [:pierre]}
-``` clojure 
+
 ;; finds all males
 (q '{:find [p]
      :where [[p :genre :M]]})
@@ -134,7 +133,7 @@ putting some data to play with in the database
 (q '{:find [x]
      :where [[x :name #{"Mathilde" "Nicolas"}]]})
 
-;; nested 'or and 'and
+;; nested `or` and `and`
 (q '{:find [x age]
      :where [(or (and [x :name "Nicolas"] [x :age age])
                  (and [x :father :jean-pierre]

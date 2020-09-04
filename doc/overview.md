@@ -33,7 +33,7 @@ Unlike in Prolog,
 
 - statements of a Datalog program can be **stated in any order**.
 - Datalog queries on finite sets **are guaranteed to terminate**
-- Datalog disallows complex terms as arguments of predicates, e.g., p (1, 2) is admissible but not p (f (1), 2). It also is more restrictive about negation and recursion usage. [(wiki)](https://en.wikipedia.org/wiki/Datalog)
+- Datalog disallows complex terms as arguments of predicates, e.g., `p (1, 2)` is admissible but not `p(f (1), 2)`. It also is more restrictive about negation and recursion usage. [(wiki)](https://en.wikipedia.org/wiki/Datalog)
 
 ## Setup
 
@@ -43,7 +43,7 @@ In order to begin to play with Crux you only have to clone [this project](https:
 git clone git@github.com:pbaille/crux-starter.git
 ```
 
-If you are not familiar with clojure you will find some instructions to setup an IDE in the readme file
+If you are not familiar with clojure you will find some instructions to setup an IDE in the [readme file](https://github.com/pbaille/crux-starter/blob/master/README.md)
 
 
 
