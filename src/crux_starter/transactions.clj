@@ -264,7 +264,7 @@
                 [[:crux.tx/fn :assoc :ivan :genre :M]])
 
 (crux/entity (crux/db node) :ivan)
-;; => {:crux.db/id :ivan, :age 40, :genre :M}
+;;=> {:crux.db/id :ivan, :age 40, :genre :M}
 
 ;; speculative transactions
 ;; ---------------------------------------------------------------------------------------------------------------------
@@ -290,4 +290,8 @@
         '{:find [x]
           :where [[x :value 42]]})
 ;=> #{[:speculative-doc1]}
+
+(+ 1 2)
+
+(+ 3 4)
 

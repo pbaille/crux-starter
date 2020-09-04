@@ -3,7 +3,8 @@
             [crux-starter.setup :refer [node]]
             [crux-starter.sugar :refer [puts q]]))
 
-;; data ----------------------------------------------------------------------------------------------------------------
+;; data
+;; ---------------------------------------------------------------------------------------------------------------------
 
 ;; putting some data to play with in the database
 
@@ -66,33 +67,30 @@
 
   )
 
-;; basics --------------------------------------------------------------------------------------------------------------
+;; basics
+;; ---------------------------------------------------------------------------------------------------------------------
 
 ;; attribute existence
 ;; find every documents that have a :father attribute
 (q '{:find [x]
      :where [[x :father]]})
-
 ;=> #{[:clement] [:jean-pierre] [:mathilde] [:nicolas] [:pierre]}
 
 ;; finds all males
 (q '{:find [p]
      :where [[p :genre :M]]})
-
 ;;=> #{[:clement] [:jean-pierre] [:nicolas] [:pierre]}
 
 ;; find sons of Valerie
 (q '{:find [p]
      :where [[p :genre :M]
              [p :mother :valerie]]})
-
 ;;=> #{[:nicolas]}
 
 ;; names of blandine's children
 (q '{:find [n]
      :where [[p :mother :blandine]
              [p :name n]]})
-
 ;;=> #{["Pierre"] ["Clément"]}
 
 ;; retrieve full entities
@@ -100,7 +98,8 @@
      :where [[p :genre :M]]
      :full-results? true})
 
-;; predicates ----------------------------------------------------------------------------------------------------------
+;; predicates
+;; ---------------------------------------------------------------------------------------------------------------------
 
 ;; finds all adults
 (q '{:find [p]
@@ -127,6 +126,7 @@
              [(/ pa 2) qa]]})
 
 ;; logic connectors
+;; ---------------------------------------------------------------------------------------------------------------------
 
 ;; or
 (q '{:find [x]
@@ -145,7 +145,8 @@
                       (or [(= age 12)]
                           [(> age 19)])))]})
 
-;; rules ---------------------------------------------------------------------------------------------------------------
+;; rules
+;; ---------------------------------------------------------------------------------------------------------------------
 
 ;; rules let you abstract clauses and create a more readable language for your queries
 ;; for instance we will create a 'parent rule wich describe a parent relationship between its two arguments
@@ -170,10 +171,10 @@
              ]
 
      :where [(ancestor :odette x)]})
-
 ;;=> #{[:clement] [:jean-pierre] [:mathilde] [:nicolas] [:pierre]}
 
-;; Ordering and pagination ---------------------------------------------------------------------------------------------
+;; Ordering and pagination
+;; ---------------------------------------------------------------------------------------------------------------------
 
 (q '{:find [p age]
      :where [[p :age age]]
