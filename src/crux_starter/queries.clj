@@ -71,7 +71,7 @@
 ;; ---------------------------------------------------------------------------------------------------------------------
 
 ;; attribute existence
-;; find every documents that have a :father attribute
+;; find every documents that have a `:father` attribute
 (q '{:find [x]
      :where [[x :father]]})
 ;=> #{[:clement] [:jean-pierre] [:mathilde] [:nicolas] [:pierre]}
@@ -137,7 +137,7 @@
 (q '{:find [x]
      :where [[x :name #{"Mathilde" "Nicolas"}]]})
 
-;; nested 'or and 'and
+;; nested `or` and `and`
 (q '{:find [x age]
      :where [(or (and [x :name "Nicolas"] [x :age age])
                  (and [x :father :jean-pierre]

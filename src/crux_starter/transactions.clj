@@ -6,7 +6,7 @@
 ;; ---------------------------------------------------------------------------------------------------------------------
 
 ;; crux valid documents are arbitrary nested edn maps
-;; the only requirement is the presence of a :crux.db/id key pointing to either a keyword or a map
+;; the only requirement is the presence of a `:crux.db/id` key pointing to either a keyword or a map
 
 ;; let's say that we have a clojure map that fulfill this requirement
 
@@ -23,7 +23,7 @@
 (crux/entity (crux/db node) :data1)
 ;;=> {:crux.db/id :data1, :data 1}
 
-;; the crux/db call is returning the current value of our database
+;; the `crux/db` call is returning the current value of our database
 ;; if we are interested in retrieving its value at a given time we can feed it a second argument
 
 (crux/db node #inst "2000") ;; returns the value of the database as in the beginning of the year 2000
@@ -32,13 +32,13 @@
 
 (crux/entity (crux/db node #inst "2000") :data1) ;;=> nil
 
-;; crux/submit-tx can take several transactions
+;; `crux/submit-tx` can take several transactions
 
 (crux/submit-tx node
                 [[:crux.tx/put {:crux.db/id :data2 :data 2}]
                  [:crux.tx/put {:crux.db/id :data3 :data 3}]])
 
-;; the :crux.tx/put operation is letting you specify the valid time frame of the given document
+;; the `:crux.tx/put` operation is letting you specify the valid time frame of the given document
 
 (crux/submit-tx node
                 [;; a document that is valid forever starting at the beginning of the year 2019
@@ -91,7 +91,7 @@
 (crux/entity (crux/db node #inst "2017-11") :timed2)
 ;;=> {:crux.db/id :timed2, :value 10}
 
-;; like :crux.tx.put, :curx.tx/delete do not have to take valid-time starts and ends
+;; like `:crux.tx.put`, `:curx.tx/delete` do not have to take valid-time starts and ends
 ;; if not the data will be deleted (invalidated) from now
 
 (crux/submit-tx node
@@ -134,7 +134,7 @@
 (crux/entity (crux/db node) :data1)
 ;;=> {:crux.db/id :data1, :data 1, :foo :bar}
 
-;; like previously seen operations, crux.db/match can take a time at which to issue the matching
+;; like previously seen operations, `crux.db/match` can take a time at which to issue the matching
 
 (crux/submit-tx node
                 [[:crux.tx/match
@@ -196,8 +196,8 @@
 
 ;; the first exemple is a transaction function that add (or substract) a given amount on our fancy :bank-account document
 
-;; transaction functions are defined with our old friend crux.tx/put
-;; the given document has to have a :crux.db/fn key pointing to the function code (quoted)
+;; transaction functions are defined with our old friend `crux.tx/put`
+;; the given document has to have a `:crux.db/fn` key pointing to the function code (quoted)
 
 (crux/submit-tx node
                 [[:crux.tx/put {:crux.db/id :update-bank-account
@@ -269,7 +269,7 @@
 ;; speculative transactions
 ;; ---------------------------------------------------------------------------------------------------------------------
 
-;; with the crux/with-tx function, we are creating an enriched database value without persisting anything to the system
+;; with the `crux/with-tx` function, we are creating an enriched database value without persisting anything to the system
 (def speculative-db
   (crux/with-tx (crux/db node)
                 [[:crux.tx/put {:crux.db/id :speculative-doc1 :value 42}]]))
@@ -291,7 +291,4 @@
           :where [[x :value 42]]})
 ;=> #{[:speculative-doc1]}
 
-(+ 1 2)
-
-(+ 3 4)
 

@@ -2,7 +2,7 @@
 
 {{doc/overview.md}}
 
-## Transaction 
+## Transactions
 
 {{doc/transactions.md}}
 

@@ -51,7 +51,7 @@ If you are not familiar with clojure you will find some instructions to setup an
 
 
 
-## Transaction 
+## Transactions
 
 ``` clojure 
 (ns crux-starter.transactions
@@ -60,7 +60,7 @@ If you are not familiar with clojure you will find some instructions to setup an
 ```
 ### putting data into the database
 crux valid documents are arbitrary nested edn maps
-;; the only requirement is the presence of a :crux.db/id key pointing to either a keyword or a map
+;; the only requirement is the presence of a `:crux.db/id` key pointing to either a keyword or a map
 let's say that we have a clojure map that fulfill this requirement
 ``` clojure 
 (def data1 {:crux.db/id :data1
@@ -76,7 +76,7 @@ the simplest way to retrieve it is to use crux/entity
 (crux/entity (crux/db node) :data1)
 ;;=> {:crux.db/id :data1, :data 1}
 ```
-the crux/db call is returning the current value of our database
+the `crux/db` call is returning the current value of our database
 ;; if we are interested in retrieving its value at a given time we can feed it a second argument
 ``` clojure 
 (crux/db node #inst "2000") ;; returns the value of the database as in the beginning of the year 2000
@@ -85,13 +85,13 @@ as we can check our previously trasacted :data1 document does not yet exists in 
 ``` clojure 
 (crux/entity (crux/db node #inst "2000") :data1) ;;=> nil
 ```
-crux/submit-tx can take several transactions
+`crux/submit-tx` can take several transactions
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/put {:crux.db/id :data2 :data 2}]
                  [:crux.tx/put {:crux.db/id :data3 :data 3}]])
 ```
-the :crux.tx/put operation is letting you specify the valid time frame of the given document
+the `:crux.tx/put` operation is letting you specify the valid time frame of the given document
 ``` clojure 
 (crux/submit-tx node
                 [;; a document that is valid forever starting at the beginning of the year 2019
@@ -143,7 +143,7 @@ the :crux.tx/put operation is letting you specify the valid time frame of the gi
 (crux/entity (crux/db node #inst "2017-11") :timed2)
 ;;=> {:crux.db/id :timed2, :value 10}
 ```
-like :crux.tx.put, :curx.tx/delete do not have to take valid-time starts and ends
+like `:crux.tx.put`, `:curx.tx/delete` do not have to take valid-time starts and ends
 ;; if not the data will be deleted (invalidated) from now
 ``` clojure 
 (crux/submit-tx node
@@ -183,7 +183,7 @@ one way to issue transaction only if certain condition is met is to use the :cru
 (crux/entity (crux/db node) :data1)
 ;;=> {:crux.db/id :data1, :data 1, :foo :bar}
 ```
-like previously seen operations, crux.db/match can take a time at which to issue the matching
+like previously seen operations, `crux.db/match` can take a time at which to issue the matching
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/match
@@ -242,8 +242,8 @@ Transaction functions are user-supplied functions that run on the individual Cru
 
 ;; the first exemple is a transaction function that add (or substract) a given amount on our fancy :bank-account document
 ```
-transaction functions are defined with our old friend crux.tx/put
-;; the given document has to have a :crux.db/fn key pointing to the function code (quoted)
+transaction functions are defined with our old friend `crux.tx/put`
+;; the given document has to have a `:crux.db/fn` key pointing to the function code (quoted)
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/put {:crux.db/id :update-bank-account
@@ -312,7 +312,7 @@ a transaction function that let you extend your document with new key (semantica
 ```
 ### speculative transactions
 ``` clojure 
-;; with the crux/with-tx function, we are creating an enriched database value without persisting anything to the system
+;; with the `crux/with-tx` function, we are creating an enriched database value without persisting anything to the system
 (def speculative-db
   (crux/with-tx (crux/db node)
                 [[:crux.tx/put {:crux.db/id :speculative-doc1 :value 42}]]))
@@ -333,11 +333,9 @@ we can chack that the added document does not exist in our real database
         '{:find [x]
           :where [[x :value 42]]})
 ;=> #{[:speculative-doc1]}
-
-(+ 1 2)
-
-(+ 3 4)
 ```
+
+
 
 ## Queries 
 
@@ -412,12 +410,11 @@ putting some data to play with in the database
 ### basics
 ``` clojure 
 ;; attribute existence
-;; find every documents that have a :father attribute
+;; find every documents that have a `:father` attribute
 (q '{:find [x]
      :where [[x :father]]})
-```
 ;=> #{[:clement] [:jean-pierre] [:mathilde] [:nicolas] [:pierre]}
-``` clojure 
+
 ;; finds all males
 (q '{:find [p]
      :where [[p :genre :M]]})
@@ -477,7 +474,7 @@ putting some data to play with in the database
 (q '{:find [x]
      :where [[x :name #{"Mathilde" "Nicolas"}]]})
 
-;; nested 'or and 'and
+;; nested `or` and `and`
 (q '{:find [x age]
      :where [(or (and [x :name "Nicolas"] [x :age age])
                  (and [x :father :jean-pierre]

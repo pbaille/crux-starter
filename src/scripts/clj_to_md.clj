@@ -102,7 +102,7 @@
   (clj->md "src/crux_starter/setup.clj" "doc/setup.md")
   (emit-article))
 
-(comment (-main))
+(-main)
 
 
 
