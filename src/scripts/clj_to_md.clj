@@ -53,9 +53,6 @@
       (text s)
       (code s)))
 
-(def parts (map marked-block (blocks tr)))
-
-(defn prob [& xs] (mapv clojure.pprint/pprint xs) (last xs))
 (defn join-adjacent-code-blocks [marked-blocks]
   (->> marked-blocks
        (partition-by #(= :code (first %)))

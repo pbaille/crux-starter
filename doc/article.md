@@ -531,3 +531,18 @@ here we will define a 'anccestor rule
    [:blandine 35]
    [:jean-pierre 40]]
 ```
+### EQL projections
+Crux queries support a 'projection' syntax,
+allowing you to decouple specifying which entities you want from what data you’d like about those entities in your queries.
+Crux’s support is based on the excellent EDN Query Language (EQL) library.
+``` clojure 
+(puts
+  {:crux.db/id :lawyer, :profession/name "Lawyer"}
+  {:crux.db/id :doctor, :profession/name "Doctor"}
+  {:crux.db/id :u1, :user/name "Ivan", :user/profession :doctor},
+  {:crux.db/id :u2, :user/name "Sergei", :user/profession :lawyer}
+  {:crux.db/id :u3, :user/name "Petr", :user/profession :doctor})
+
+(q '{:find [(eql/project ?user [:user/name {:user/profession [:profession/name]}])]
+     :where [[?user :user/name ?uid]]})
+```

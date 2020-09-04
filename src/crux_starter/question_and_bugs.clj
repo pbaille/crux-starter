@@ -1,7 +1,7 @@
 (ns crux-starter.question-and-bugs
-    (:require [crux-starter.setup :refer [node]]
-              [crux-starter.sugar :refer [puts q]]
-              [crux.api :as crux]))
+  (:require [crux-starter.setup :refer [node]]
+            [crux-starter.sugar :refer [puts q]]
+            [crux.api :as crux]))
 
 (comment
   :in-rule
@@ -125,9 +125,42 @@
                                          :digicode 654321}}}]])
 
   (q '{:find [(eql/project x [:name :age {:address [:street :zip]}])]
-       :where [[x :genre :M]]}))
+       :where [[x :genre :M]
+               [x :address _]]}))
 
+(comment
+  :projections
 
+  (crux/submit-tx node
+                  [[:crux.tx/put
+                    {:crux.db/id :one
+                     :a true
+                     :b {:c 2
+                         :d 3
+                         :e {:f 5
+                             :g 6}}}]
+
+                   [:crux.tx/put
+                    {:crux.db/id :two
+                     :a false
+                     :b {:c 2
+                         :d 3
+                         :e {:f 5
+                             :g 6}}}]])
+
+  (q '{:find [(eql/project x [:a {:b [:c]}])]
+       :where [[x :a true]]}))
+
+(crux/submit-tx node
+                [[:crux.tx/put {:crux.db/id :lawyer, :profession/name "Lawyer"}]
+                 [:crux.tx/put {:crux.db/id :doctor , :profession/name "Doctor"}]
+                 [:crux.tx/put {:crux.db/id :u1, :user/name "Ivan", :user/profession :doctor}],
+                 [:crux.tx/put {:crux.db/id :u2, :user/name "Sergei", :user/profession :layer}]
+                 [:crux.tx/put {:crux.db/id :u3, :user/name "Petr", :user/profession :doctor}]])
+
+(crux/q (crux/db node)
+        '{:find [(eql/project ?user [:user/name {:user/profession [:profession/name]}])]
+          :where [[?user :user/name ?uid]]})
 
 ;; ordering
 
