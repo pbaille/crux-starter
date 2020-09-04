@@ -3,7 +3,7 @@
   (:require [crux.api :as crux]))
 ```
 this setup is for playing only
-;; it does not persist anything
+it does not persist anything
 ``` clojure 
 (def node
   (crux/start-node

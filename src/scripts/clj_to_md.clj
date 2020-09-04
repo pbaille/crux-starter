@@ -67,7 +67,7 @@
   (map (fn [[type content :as block]]
          (if (= :code type)
            block
-           [type (str/replace content #"^;+ " "")]))
+           [type (str/replace content #";+ " "")]))
        xs))
 
 (defn to-md [marked-blocks]

@@ -184,7 +184,7 @@
 
 ;; sadly grandma is dead before christmass 2019 and we still have 39 dollars
 (crux/entity (crux/db node) :bank-account)
-;=> {:crux.db/id :bank-account, :dollars 20}
+;=> {:crux.db/id :bank-account, :dollars 39}
 
 ;; transaction functions
 ;; ---------------------------------------------------------------------------------------------------------------------
@@ -193,8 +193,7 @@
 ;; They can take any number of parameters, and return normal transaction operations which are then indexed as above.
 ;; If they return false or throw an exception, the whole transaction will roll back.
 
-
-;; the first exemple is a transaction function that add (or substract) a given amount on our fancy :bank-account document
+;; the first exemple is a transaction function that add (or substract) a given amount on our fancy `:bank-account` document
 
 ;; transaction functions are defined with our old friend `crux.tx/put`
 ;; the given document has to have a `:crux.db/fn` key pointing to the function code (quoted)

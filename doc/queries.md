@@ -143,8 +143,8 @@ putting some data to play with in the database
 ```
 ### rules
 rules let you abstract clauses and create a more readable language for your queries
-;; for instance we will create a 'parent rule wich describe a parent relationship between its two arguments
-;; (parent a b) means that a is a parent of b (either father or mother)
+for instance we will create a 'parent rule wich describe a parent relationship between its two arguments
+(parent a b) means that a is a parent of b (either father or mother)
 ``` clojure 
 (q '{:find [a b]
      ;; introducing the parent rule
@@ -154,7 +154,7 @@ rules let you abstract clauses and create a more readable language for your quer
      })
 ```
 rules are also a great way to express traversal relationships
-;; here we will define a 'anccestor rule
+here we will define a 'anccestor rule
 ``` clojure 
 (q '{:find [x]
      ;; we define ancestor in terms of parent
