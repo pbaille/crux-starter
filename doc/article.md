@@ -64,7 +64,7 @@ the only requirement is the presence of a `:crux.db/id` key pointing to either a
 let's say that we have a clojure map that fulfill this requirement
 ``` clojure 
 (def data1 {:crux.db/id :data1
-            :data 1})
+            :myfield "mydata"})
 ```
 we can transact it to the database like this
 ``` clojure 
@@ -74,7 +74,7 @@ we can transact it to the database like this
 the simplest way to retrieve it is to use crux/entity
 ``` clojure 
 (crux/entity (crux/db node) :data1)
-;;=> {:crux.db/id :data1, :data 1}
+;;=> {:crux.db/id :data1, :myfield "mydata"}
 ```
 the `crux/db` call is returning the current value of our database
 if we are interested in retrieving its value at a given time we can feed it a second argument
@@ -88,7 +88,7 @@ as we can check our previously trasacted :data1 document does not yet exists in 
 `crux/submit-tx` can take several transactions
 ``` clojure 
 (crux/submit-tx node
-                [[:crux.tx/put {:crux.db/id :data2 :data 2}]
+                [[:crux.tx/put {:crux.db/id :data2 :foo {:arbitrary {:nested "map"}}}]
                  [:crux.tx/put {:crux.db/id :data3 :data 3}]])
 ```
 the `:crux.tx/put` operation is letting you specify the valid time frame of the given document
@@ -171,33 +171,33 @@ and issue some transactions only if those are equals
 (crux/submit-tx node
                 [[:crux.tx/match
                   :data1 ;; we will check this entity against next provided arg
-                  {:crux.db/id :data1 :data 1} ;; the value we check the corresponding document against
+                  {:crux.db/id :data1 :myfield "mydata"} ;; the value we check the corresponding document against
                   ]
 
                  ;; if the match expression succeed we will transact the following forms
                  [:crux.tx/put
                   {:crux.db/id :data1
-                   :data 1
+                   :myfield "mydata"
                    :foo :bar}]]) ;; <- we had an entry to our document
 
 (crux/entity (crux/db node) :data1)
-;;=> {:crux.db/id :data1, :data 1, :foo :bar}
+;;=> {:crux.db/id :data1, :myfield "mydata", :foo :bar}
 ```
 like previously seen operations, `crux.db/match` can take a time at which to issue the matching
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/match
                   :data2
-                  {:crux.db/id :data2 :data 2}
+                  {:crux.db/id :data3 :data 3}
                   #inst "2019"] ;; the point in time where we do the check
 
                  ;; since in 2019, :data2 does not still exists, the belowing transaction is not executed
                  [:crux.tx/put
-                  {:crux.db/id :data2
+                  {:crux.db/id :data3
                    :never :occurs}]])
 
-(crux/entity (crux/db node) :data2)
-;;=> {:crux.db/id :data2, :data 2}
+(crux/entity (crux/db node) :data3)
+;;=> {:crux.db/id :data3, :data 3}
 
 
 ```
