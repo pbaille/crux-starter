@@ -42,7 +42,7 @@
 
 (block-guard h4 s
              (and (= 1 (count (lines s)))
-                  (if-let [[_ t] (re-matches #";+ (.*) -+\n" s)]
+                  (if-let [[_ t] (re-matches #";+ (.+) -+" s)]
                     t)))
 
 (defn title [x]
@@ -100,3 +100,9 @@
   (emit-article))
 
 (-main)
+
+(comment
+  (h4 ";; yop ---")
+  (->> (slurp "src/crux_starter/p01_transactions.clj")
+       blocks
+       (map marked-block)))
