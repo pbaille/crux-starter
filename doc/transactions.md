@@ -1,7 +1,7 @@
 ``` clojure 
-(ns crux-starter.transactions
+(ns crux-starter.p01_transactions
   (:require [crux.api :as crux]
-            [crux-starter.setup :refer [node]]))
+            [crux-starter.p00_setup :refer [node]]))
 ```
 ### putting data into the database
 crux valid documents are arbitrary nested edn maps
@@ -88,7 +88,7 @@ the `:crux.tx/put` operation is letting you specify the valid time frame of the 
 (crux/entity (crux/db node #inst "2017-11") :timed2)
 ;;=> {:crux.db/id :timed2, :value 10}
 ```
-like `:crux.tx.put`, `:curx.tx/delete` do not have to take valid-time starts and ends
+like `:crux.tx.put`, `:crux.tx/delete` do not have to take valid-time starts and ends
 if not the data will be deleted (invalidated) from now
 ``` clojure 
 (crux/submit-tx node
@@ -109,7 +109,7 @@ if not the data will be deleted (invalidated) from now
                 [[:crux.tx/evict :one]])
 ```
 ### conditional transactions
-one way to issue transaction only if certain condition is met is to use the :crux.tx/match operation
+one way to issue transaction only if certain condition is met is to use the `:crux.tx/match` operation
 it let you verify the value of a database document against a given value
 and issue some transactions only if those are equals
 ``` clojure 
@@ -182,7 +182,7 @@ like previously seen operations, `crux.db/match` can take a time at which to iss
 ### transaction functions
 Transaction functions are user-supplied functions that run on the individual Crux nodes when a transaction is being ingested.
 They can take any number of parameters, and return normal transaction operations which are then indexed as above.
-If they return false or throw an exception, the whole transaction will roll back.
+If they return false or throw an exception, the whole transaction will roll back.
 the first exemple is a transaction function that add (or substract) a given amount on our fancy `:bank-account` document
 transaction functions are defined with our old friend `crux.tx/put`
 the given document has to have a `:crux.db/fn` key pointing to the function code (quoted)
@@ -232,7 +232,7 @@ a transaction function that can create a new document by merging existing/given 
 ;;=> {:crux.db/id :m3, :a 4, :b 2, :c 3, :d 5}
 ```
 exemple 3
-a transaction function that let you extend your document with new key (semantically similar to clojure's assoc)
+a transaction function that let you extend your document with new key (semantically similar to clojure's `assoc`)
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/put {:crux.db/id :assoc

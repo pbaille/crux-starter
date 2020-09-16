@@ -1,6 +1,6 @@
 (ns crux-starter.sugar
   (:require [crux.api :as crux]
-            [crux-starter.setup :refer [node]]))
+            [crux-starter.p00_setup :refer [node]]))
 
 (defn puts
   "transact several puts on node"

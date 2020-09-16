@@ -54,9 +54,9 @@ If you are not familiar with clojure you will find some instructions to setup an
 ## Transactions
 
 ``` clojure 
-(ns crux-starter.transactions
+(ns crux-starter.p01_transactions
   (:require [crux.api :as crux]
-            [crux-starter.setup :refer [node]]))
+            [crux-starter.p00_setup :refer [node]]))
 ```
 ### putting data into the database
 crux valid documents are arbitrary nested edn maps
@@ -143,7 +143,7 @@ the `:crux.tx/put` operation is letting you specify the valid time frame of the 
 (crux/entity (crux/db node #inst "2017-11") :timed2)
 ;;=> {:crux.db/id :timed2, :value 10}
 ```
-like `:crux.tx.put`, `:curx.tx/delete` do not have to take valid-time starts and ends
+like `:crux.tx.put`, `:crux.tx/delete` do not have to take valid-time starts and ends
 if not the data will be deleted (invalidated) from now
 ``` clojure 
 (crux/submit-tx node
@@ -164,7 +164,7 @@ if not the data will be deleted (invalidated) from now
                 [[:crux.tx/evict :one]])
 ```
 ### conditional transactions
-one way to issue transaction only if certain condition is met is to use the :crux.tx/match operation
+one way to issue transaction only if certain condition is met is to use the `:crux.tx/match` operation
 it let you verify the value of a database document against a given value
 and issue some transactions only if those are equals
 ``` clojure 
@@ -237,7 +237,7 @@ like previously seen operations, `crux.db/match` can take a time at which to iss
 ### transaction functions
 Transaction functions are user-supplied functions that run on the individual Crux nodes when a transaction is being ingested.
 They can take any number of parameters, and return normal transaction operations which are then indexed as above.
-If they return false or throw an exception, the whole transaction will roll back.
+If they return false or throw an exception, the whole transaction will roll back.
 the first exemple is a transaction function that add (or substract) a given amount on our fancy `:bank-account` document
 transaction functions are defined with our old friend `crux.tx/put`
 the given document has to have a `:crux.db/fn` key pointing to the function code (quoted)
@@ -287,7 +287,7 @@ a transaction function that can create a new document by merging existing/given 
 ;;=> {:crux.db/id :m3, :a 4, :b 2, :c 3, :d 5}
 ```
 exemple 3
-a transaction function that let you extend your document with new key (semantically similar to clojure's assoc)
+a transaction function that let you extend your document with new key (semantically similar to clojure's `assoc`)
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/put {:crux.db/id :assoc
@@ -337,9 +337,9 @@ we can chack that the added document does not exist in our real database
 ## Queries 
 
 ``` clojure 
-(ns crux-starter.queries
+(ns crux-starter.p02_queries
   (:require [crux.api :as crux]
-            [crux-starter.setup :refer [node]]
+            [crux-starter.p00_setup :refer [node]]
             [crux-starter.sugar :refer [puts q]]))
 ```
 ### data
@@ -481,8 +481,8 @@ putting some data to play with in the database
 ```
 ### rules
 rules let you abstract clauses and create a more readable language for your queries
-for instance we will create a 'parent rule wich describe a parent relationship between its two arguments
-(parent a b) means that a is a parent of b (either father or mother)
+for instance we will create a `parent` rule wich describe a parent relationship between its two arguments
+`(parent a b)` means that `a` is a `parent` of `b` (either father or mother)
 ``` clojure 
 (q '{:find [a b]
      ;; introducing the parent rule
@@ -492,7 +492,7 @@ for instance we will create a 'parent rule wich describe a parent relationship b
      })
 ```
 rules are also a great way to express traversal relationships
-here we will define a 'anccestor rule
+here we will define a `anccestor` rule
 ``` clojure 
 (q '{:find [x]
      ;; we define ancestor in terms of parent
@@ -546,3 +546,8 @@ Crux’s support is based on the excellent EDN Query Language (EQL) library.
 (q '{:find [(eql/project ?user [:user/name {:user/profession [:profession/name]}])]
      :where [[?user :user/name ?uid]]})
 ```
+
+## Conclusion 
+
+In this article we've got a brief overview of crux main ideas and API, many things remains to be seen, 
+like the infrastructure and deployment parts. I hope to be able to cover this in further articles, so stay tuned! 

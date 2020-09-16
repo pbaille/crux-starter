@@ -1,4 +1,4 @@
-(ns crux-starter.setup
+(ns crux-starter.p00_setup
   (:require [crux.api :as crux]))
 
 ;; this setup is for playing only

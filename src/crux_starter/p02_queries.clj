@@ -1,6 +1,6 @@
-(ns crux-starter.queries
+(ns crux-starter.p02_queries
   (:require [crux.api :as crux]
-            [crux-starter.setup :refer [node]]
+            [crux-starter.p00_setup :refer [node]]
             [crux-starter.sugar :refer [puts q]]))
 
 ;; data
@@ -149,8 +149,8 @@
 ;; ---------------------------------------------------------------------------------------------------------------------
 
 ;; rules let you abstract clauses and create a more readable language for your queries
-;; for instance we will create a 'parent rule wich describe a parent relationship between its two arguments
-;; (parent a b) means that a is a parent of b (either father or mother)
+;; for instance we will create a `parent` rule wich describe a parent relationship between its two arguments
+;; `(parent a b)` means that `a` is a `parent` of `b` (either father or mother)
 
 (q '{:find [a b]
      ;; introducing the parent rule
@@ -160,7 +160,7 @@
      })
 
 ;; rules are also a great way to express traversal relationships
-;; here we will define a 'anccestor rule
+;; here we will define a `anccestor` rule
 
 (q '{:find [x]
      ;; we define ancestor in terms of parent

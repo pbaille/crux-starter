@@ -1,6 +1,6 @@
-(ns crux-starter.transactions
+(ns crux-starter.p01_transactions
   (:require [crux.api :as crux]
-            [crux-starter.setup :refer [node]]))
+            [crux-starter.p00_setup :refer [node]]))
 
 ;; putting data into the database
 ;; ---------------------------------------------------------------------------------------------------------------------
@@ -91,7 +91,7 @@
 (crux/entity (crux/db node #inst "2017-11") :timed2)
 ;;=> {:crux.db/id :timed2, :value 10}
 
-;; like `:crux.tx.put`, `:curx.tx/delete` do not have to take valid-time starts and ends
+;; like `:crux.tx.put`, `:crux.tx/delete` do not have to take valid-time starts and ends
 ;; if not the data will be deleted (invalidated) from now
 
 (crux/submit-tx node
@@ -115,7 +115,7 @@
 ;; conditional transactions
 ;; ---------------------------------------------------------------------------------------------------------------------
 
-;; one way to issue transaction only if certain condition is met is to use the :crux.tx/match operation
+;; one way to issue transaction only if certain condition is met is to use the `:crux.tx/match` operation
 ;; it let you verify the value of a database document against a given value
 ;; and issue some transactions only if those are equals
 
@@ -191,7 +191,7 @@
 
 ;; Transaction functions are user-supplied functions that run on the individual Crux nodes when a transaction is being ingested.
 ;; They can take any number of parameters, and return normal transaction operations which are then indexed as above.
-;; If they return false or throw an exception, the whole transaction will roll back.
+;; If they return false or throw an exception, the whole transaction will roll back.
 
 ;; the first exemple is a transaction function that add (or substract) a given amount on our fancy `:bank-account` document
 
@@ -245,7 +245,7 @@
 
 ;; exemple 3
 
-;; a transaction function that let you extend your document with new key (semantically similar to clojure's assoc)
+;; a transaction function that let you extend your document with new key (semantically similar to clojure's `assoc`)
 
 (crux/submit-tx node
                 [[:crux.tx/put {:crux.db/id :assoc

@@ -1,4 +1,4 @@
-(ns crux-starter.space-tutorial
+(ns crux-starter.extras.space-tutorial
   (:require [crux.api :as crux]
             [clojure.java.io :as io]))
 

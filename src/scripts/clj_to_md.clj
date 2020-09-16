@@ -94,9 +94,9 @@
         (spit "doc/article.md" _)))
 
 (defn -main [& args]
-  (clj->md "src/crux_starter/transactions.clj" "doc/transactions.md")
-  (clj->md "src/crux_starter/queries.clj" "doc/queries.md")
-  (clj->md "src/crux_starter/setup.clj" "doc/setup.md")
+  (clj->md "src/crux_starter/p00_setup.clj" "doc/setup.md")
+  (clj->md "src/crux_starter/p01_transactions.clj" "doc/transactions.md")
+  (clj->md "src/crux_starter/p02_queries.clj" "doc/queries.md")
   (emit-article))
 
 (-main)

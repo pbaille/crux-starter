@@ -1,5 +1,5 @@
-(ns crux-starter.topics
-  (:require [crux-starter.setup :refer [node]]
+(ns crux-starter.extras.topics
+  (:require [crux-starter.p00_setup :refer [node]]
             [crux-starter.sugar :refer [puts q]]
             [crux.api :as crux]))
 

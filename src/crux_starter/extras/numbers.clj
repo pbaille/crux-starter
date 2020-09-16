@@ -1,4 +1,4 @@
-(ns crux-starter.numbers
+(ns crux-starter.extras.numbers
   (:require [crux-starter.sugar [puts q]]))
 
 ;; populate db with simple number records (for testing purposes)
