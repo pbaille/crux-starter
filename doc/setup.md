@@ -2,8 +2,7 @@
 (ns crux-starter.p00_setup
   (:require [crux.api :as crux]))
 ```
-this setup is for playing only
-it does not persist anything  
+this setup is for playing onlyit does not persist anything  
 
 ``` clojure 
 (def node

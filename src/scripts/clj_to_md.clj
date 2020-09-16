@@ -15,6 +15,9 @@
 (defn sep? [s]
   (re-matches #";+ *-+" s))
 
+(defn remove-starting-semicolons [s]
+  (str/replace s #";+ " ""))
+
 (defmacro block-guard [name sym test]
   `(defn ~name [~sym]
      (if-let [tret# ~test]
@@ -29,24 +32,25 @@
 (block-guard code s
              (some (complement text-line?) (lines s)))
 
-(block-guard h2 s
+(block-guard h1 s
              (let [[l1 l2 l3 & rs :as ls] (lines s)]
                (and (= 3 (count ls))
                     (sep? l3) (sep? l1)
-                    l2)))
+                    (remove-starting-semicolons l2))))
 
-(block-guard h3 s
+(block-guard h2 s
              (let [[l1 l2 & rs :as ls] (lines s)]
                (and (= 2 (count ls))
-                    (sep? l2) l1)))
+                    (sep? l2)
+                    (remove-starting-semicolons l1))))
 
-(block-guard h4 s
+(block-guard h3 s
              (and (= 1 (count (lines s)))
                   (if-let [[_ t] (re-matches #";+ (.+) -+" s)]
                     t)))
 
 (defn title [x]
-  (or (h2 x) (h3 x) (h4 x)))
+  (or (h1 x) (h2 x) (h3 x)))
 
 (defn marked-block [s]
   (or (title s)
@@ -64,7 +68,7 @@
   (map (fn [[type content :as block]]
          (if (= :code type)
            block
-           [type (str/replace content #";+ " "")]))
+           [type (remove-starting-semicolons content)]))
        xs))
 
 (defn add-linebreaks [xs]
@@ -74,15 +78,22 @@
            block))
        xs))
 
+(defn remove-text-blocks-inner-linebreaks [xs]
+  (map (fn [[type content :as block]]
+         (if (= type :text)
+           [:text (apply str (lines content))]
+           block))
+       xs))
+
 (defn to-md [marked-blocks]
   (str/join "\n"
             (keep (fn [[t c]]
                     (when-not (= t :sep)
                       (case t
                         :code (str "``` clojure \n" c "\n```")
+                        :h1 (str "# " c)
                         :h2 (str "## " c)
                         :h3 (str "### " c)
-                        :h4 (str "#### " c)
                         :text c)))
                   marked-blocks)))
 
@@ -92,6 +103,7 @@
        (map marked-block)
        join-adjacent-code-blocks
        clean-text-blocks
+       remove-text-blocks-inner-linebreaks
        add-linebreaks
        to-md
        (spit output)))
@@ -102,15 +114,17 @@
         (spit "doc/article.md" _)))
 
 (defn -main [& args]
+  (println "compiling article.md")
   (clj->md "src/crux_starter/p00_setup.clj" "doc/setup.md")
   (clj->md "src/crux_starter/p01_transactions.clj" "doc/transactions.md")
   (clj->md "src/crux_starter/p02_queries.clj" "doc/queries.md")
   (emit-article))
 
-(-main)
+
 
 (comment
-  (h4 ";; yop ---")
+  (-main)
+  (h3 ";; yop ---")
   (->> (slurp "src/crux_starter/p01_transactions.clj")
        blocks
        (map marked-block)))

@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+clojure -A:compile-markdown
+
+cd doc
+
+python3 export-article-to-notion.py
+
+cd ..
+

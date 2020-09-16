@@ -3,9 +3,8 @@
   (:require [crux.api :as crux]
             [crux-starter.p00_setup :refer [node]]))
 ```
-### Putting data into the database
-Crux valid documents are arbitrary nested edn maps.
-The only requirement is the presence of a `:crux.db/id` key pointing to either a keyword or a map.  
+## Putting data into the database
+Crux valid documents are arbitrary nested edn maps.The only requirement is the presence of a `:crux.db/id` key pointing to either a keyword or a map.  
 
 Let's say that we have a clojure map that fulfill this requirement.  
 
@@ -25,8 +24,7 @@ The simplest way to retrieve it is to use `crux/entity`:
 (crux/entity (crux/db node) :data1)
 ;;=> {:crux.db/id :data1, :myfield "mydata"}
 ```
-The `crux/db` call is returning the current value of our database.
-If we are interested in retrieving its value at a given time we can feed it a second argument.  
+The `crux/db` call is returning the current value of our database.If we are interested in retrieving its value at a given time we can feed it a second argument.  
 
 ``` clojure 
 (crux/db node #inst "2000") ;; returns the value of the database as in the beginning of the year 2000
@@ -76,7 +74,7 @@ The `:crux.tx/put` operation is letting you specify the valid time frame of the 
 (crux/entity (crux/db node #inst "2019") :timed2)
 ;;=> nil
 ```
-### Deleting (invalidating) documents
+## Deleting (invalidating) documents
 ``` clojure 
 ;; This form will delete (invalidate) our :timed2 entity  (that is valid in 2017 only) from august to october 2017.
 (crux/submit-tx node
@@ -96,8 +94,7 @@ The `:crux.tx/put` operation is letting you specify the valid time frame of the 
 (crux/entity (crux/db node #inst "2017-11") :timed2)
 ;;=> {:crux.db/id :timed2, :value 10}
 ```
-Like `:crux.tx.put`, `:crux.tx/delete` do not have to take valid-time starts and ends.
-If not the data will be deleted (invalidated) from now.  
+Like `:crux.tx.put`, `:crux.tx/delete` do not have to take valid-time starts and ends.If not the data will be deleted (invalidated) from now.  
 
 ``` clojure 
 (crux/submit-tx node
@@ -111,16 +108,14 @@ If not the data will be deleted (invalidated) from now.
 (crux/entity (crux/db node #inst "2019") :timed1)
 ;;=> {:crux.db/id :timed1, :value 10}
 ```
-### Eviction
+## Eviction
 ``` clojure 
 ;; remove all historical versions of a document
 (crux/submit-tx node
                 [[:crux.tx/evict :one]])
 ```
-### Conditional transactions
-One way to issue transaction only if certain condition is met is to use the `:crux.tx/match` operation.
-It let you verify the value of a database document against a given value
-and issue some transactions only if those are equals.  
+## Conditional transactions
+One way to issue transaction only if certain condition is met is to use the `:crux.tx/match` operation.It let you verify the value of a database document against a given valueand issue some transactions only if those are equals.  
 
 ``` clojure 
 (crux/submit-tx node
@@ -157,7 +152,7 @@ Like previously seen operations, `crux.db/match` can take a time at which to iss
 
 
 ```
-### modelling a simplistic bank account
+## modelling a simplistic bank account
 ``` clojure 
 ;; initiating it with 2018 with 20 dollars on it
 (crux/submit-tx node
@@ -190,16 +185,13 @@ Like previously seen operations, `crux.db/match` can take a time at which to iss
 (crux/entity (crux/db node) :bank-account)
 ;=> {:crux.db/id :bank-account, :dollars 39}
 ```
-### Transaction functions
-Transaction functions are user-supplied functions that run on the individual Crux nodes when a transaction is being ingested.
-They can take any number of parameters, and return normal transaction operations which are then indexed as above.
-If they return false or throw an exception, the whole transaction will roll back.  
+## Transaction functions
+Transaction functions are user-supplied functions that run on the individual Crux nodes when a transaction is being ingested.They can take any number of parameters, and return normal transaction operations which are then indexed as above.If they return false or throw an exception, the whole transaction will roll back.  
 
-#### Exemple 1
+### Exemple 1
 A transaction function that add (or substract) a given amount on our fancy `:bank-account` document.  
 
-Transaction functions are defined with our old friend `crux.tx/put`.
-The given document has to have a `:crux.db/fn` key pointing to the function code (quoted).  
+Transaction functions are defined with our old friend `crux.tx/put`.The given document has to have a `:crux.db/fn` key pointing to the function code (quoted).  
 
 ``` clojure 
 (crux/submit-tx node
@@ -219,7 +211,7 @@ The given document has to have a `:crux.db/fn` key pointing to the function code
 
 (crux/entity (crux/db node) :bank-account)
 ```
-#### Exemple 2
+### Exemple 2
 A transaction function that can create a new document by merging existing/given ones.  
 
 ``` clojure 
@@ -247,7 +239,7 @@ A transaction function that can create a new document by merging existing/given 
 (crux/entity (crux/db node) :m3)
 ;;=> {:crux.db/id :m3, :a 4, :b 2, :c 3, :d 5}
 ```
-#### Exemple 3
+### Exemple 3
 A transaction function that let you extend your document with new key (semantically similar to clojure's `assoc`).  
 
 ``` clojure 
@@ -269,7 +261,7 @@ A transaction function that let you extend your document with new key (semantica
 (crux/entity (crux/db node) :ivan)
 ;;=> {:crux.db/id :ivan, :age 40, :genre :M}
 ```
-### Speculative transactions
+## Speculative transactions
 ``` clojure 
 ;; with the `crux/with-tx` function, we are creating an enriched database value without persisting anything to the system
 (def speculative-db
@@ -294,5 +286,4 @@ We can chack that the added document does not exist in our real database.
           :where [[x :value 42]]})
 ;=> #{[:speculative-doc1]}
 ```
-
   

@@ -4,7 +4,7 @@
             [crux-starter.p00_setup :refer [node]]
             [crux-starter.sugar :refer [puts q]]))
 ```
-### Data
+## Data
 Putting some data to play with in the database:  
 
 ``` clojure 
@@ -67,7 +67,7 @@ Putting some data to play with in the database:
 
   )
 ```
-### Basics
+## Basics
 ``` clojure 
 ;; attribute existence
 ;; find every documents that have a `:father` attribute
@@ -97,7 +97,7 @@ Putting some data to play with in the database:
      :where [[p :genre :M]]
      :full-results? true})
 ```
-### Predicates
+## Predicates
 ``` clojure 
 ;; finds all adults
 (q '{:find [p]
@@ -123,7 +123,7 @@ Putting some data to play with in the database:
              [q :age qa]
              [(/ pa 2) qa]]})
 ```
-### Logic connectors
+## Logic connectors
 ``` clojure 
 ;; or
 (q '{:find [x]
@@ -142,10 +142,8 @@ Putting some data to play with in the database:
                       (or [(= age 12)]
                           [(> age 19)])))]})
 ```
-### Rules
-Rules let you abstract clauses and create a more readable language for your queries.
-For instance we will create a `parent` rule wich describe a parent relationship between its two arguments
-`(parent a b)` means that `a` is a `parent` of `b` (either father or mother).  
+## Rules
+Rules let you abstract clauses and create a more readable language for your queries.For instance we will create a `parent` rule wich describe a parent relationship between its two arguments`(parent a b)` means that `a` is a `parent` of `b` (either father or mother).  
 
 ``` clojure 
 (q '{:find [a b]
@@ -155,8 +153,7 @@ For instance we will create a `parent` rule wich describe a parent relationship 
      :where [(parent a b)]
      })
 ```
-Rules are also a great way to express traversal relationships.
-Here we will define a `anccestor` rule  
+Rules are also a great way to express traversal relationships.Here we will define a `anccestor` rule  
 
 ``` clojure 
 (q '{:find [x]
@@ -170,7 +167,7 @@ Here we will define a `anccestor` rule
      :where [(ancestor :odette x)]})
 ;;=> #{[:clement] [:jean-pierre] [:mathilde] [:nicolas] [:pierre]}
 ```
-### Ordering and pagination
+## Ordering and pagination
 ``` clojure 
 (q '{:find [p age]
      :where [[p :age age]]
@@ -196,10 +193,8 @@ Here we will define a `anccestor` rule
    [:blandine 35]
    [:jean-pierre 40]]
 ```
-### EQL projections
-Crux queries support a 'projection' syntax,
-allowing you to decouple specifying which entities you want from what data you’d like about those entities in your queries.
-Crux’s support is based on the excellent EDN Query Language (EQL) library.  
+## EQL projections
+Crux queries support a 'projection' syntax,allowing you to decouple specifying which entities you want from what data you’d like about those entities in your queries.Crux’s support is based on the excellent EDN Query Language (EQL) library.  
 
 ``` clojure 
 (puts
