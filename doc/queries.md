@@ -4,8 +4,8 @@
             [crux-starter.p00_setup :refer [node]]
             [crux-starter.sugar :refer [puts q]]))
 ```
-### data
-putting some data to play with in the database  
+### Data
+Putting some data to play with in the database:  
 
 ``` clojure 
 (puts
@@ -67,7 +67,7 @@ putting some data to play with in the database
 
   )
 ```
-### basics
+### Basics
 ``` clojure 
 ;; attribute existence
 ;; find every documents that have a `:father` attribute
@@ -97,7 +97,7 @@ putting some data to play with in the database
      :where [[p :genre :M]]
      :full-results? true})
 ```
-### predicates
+### Predicates
 ``` clojure 
 ;; finds all adults
 (q '{:find [p]
@@ -123,7 +123,7 @@ putting some data to play with in the database
              [q :age qa]
              [(/ pa 2) qa]]})
 ```
-### logic connectors
+### Logic connectors
 ``` clojure 
 ;; or
 (q '{:find [x]
@@ -142,10 +142,10 @@ putting some data to play with in the database
                       (or [(= age 12)]
                           [(> age 19)])))]})
 ```
-### rules
-rules let you abstract clauses and create a more readable language for your queries
-for instance we will create a `parent` rule wich describe a parent relationship between its two arguments
-`(parent a b)` means that `a` is a `parent` of `b` (either father or mother)  
+### Rules
+Rules let you abstract clauses and create a more readable language for your queries.
+For instance we will create a `parent` rule wich describe a parent relationship between its two arguments
+`(parent a b)` means that `a` is a `parent` of `b` (either father or mother).  
 
 ``` clojure 
 (q '{:find [a b]
@@ -155,8 +155,8 @@ for instance we will create a `parent` rule wich describe a parent relationship 
      :where [(parent a b)]
      })
 ```
-rules are also a great way to express traversal relationships
-here we will define a `anccestor` rule  
+Rules are also a great way to express traversal relationships.
+Here we will define a `anccestor` rule  
 
 ``` clojure 
 (q '{:find [x]

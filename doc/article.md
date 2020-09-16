@@ -58,47 +58,47 @@ If you are not familiar with clojure you will find some instructions to setup an
   (:require [crux.api :as crux]
             [crux-starter.p00_setup :refer [node]]))
 ```
-### putting data into the database
-crux valid documents are arbitrary nested edn maps
-the only requirement is the presence of a `:crux.db/id` key pointing to either a keyword or a map  
+### Putting data into the database
+Crux valid documents are arbitrary nested edn maps.
+The only requirement is the presence of a `:crux.db/id` key pointing to either a keyword or a map.  
 
-let's say that we have a clojure map that fulfill this requirement  
+Let's say that we have a clojure map that fulfill this requirement.  
 
 ``` clojure 
 (def data1 {:crux.db/id :data1
             :myfield "mydata"})
 ```
-we can transact it to the database like this  
+We can transact it to the database like this:  
 
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/put data1]])
 ```
-the simplest way to retrieve it is to use `crux/entity`  
+The simplest way to retrieve it is to use `crux/entity`:  
 
 ``` clojure 
 (crux/entity (crux/db node) :data1)
 ;;=> {:crux.db/id :data1, :myfield "mydata"}
 ```
-the `crux/db` call is returning the current value of our database
-if we are interested in retrieving its value at a given time we can feed it a second argument  
+The `crux/db` call is returning the current value of our database.
+If we are interested in retrieving its value at a given time we can feed it a second argument.  
 
 ``` clojure 
 (crux/db node #inst "2000") ;; returns the value of the database as in the beginning of the year 2000
 ```
-as we can check our previously trasacted `:data1` document does not yet exists in 2000  
+As we can check our previously trasacted `:data1` document does not yet exists in 2000.  
 
 ``` clojure 
 (crux/entity (crux/db node #inst "2000") :data1) ;;=> nil
 ```
-`crux/submit-tx` can take several transactions  
+`crux/submit-tx` can take several transactions.  
 
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/put {:crux.db/id :data2 :foo {:arbitrary {:nested "map"}}}]
                  [:crux.tx/put {:crux.db/id :data3 :data 3}]])
 ```
-the `:crux.tx/put` operation is letting you specify the valid time frame of the given document  
+The `:crux.tx/put` operation is letting you specify the valid time frame of the given document.  
 
 ``` clojure 
 (crux/submit-tx node
@@ -111,7 +111,7 @@ the `:crux.tx/put` operation is letting you specify the valid time frame of the 
                   #inst "2017"
                   #inst "2018"]])
 
-;; timed1 is not yet valid in 2000
+;; :timed1 is not yet valid in 2000
 (crux/entity (crux/db node #inst "2000") :timed1)
 ;;=> nil
 
@@ -131,9 +131,9 @@ the `:crux.tx/put` operation is letting you specify the valid time frame of the 
 (crux/entity (crux/db node #inst "2019") :timed2)
 ;;=> nil
 ```
-### deleting (invalidating) documents
+### Deleting (invalidating) documents
 ``` clojure 
-;; this form will delete (invalidate) our :timed2 entity  (that is valid in 2017 only) from august to october 2017
+;; This form will delete (invalidate) our :timed2 entity  (that is valid in 2017 only) from august to october 2017.
 (crux/submit-tx node
                 [[:crux.tx/delete :timed2
                   #inst "2017-08"
@@ -151,8 +151,8 @@ the `:crux.tx/put` operation is letting you specify the valid time frame of the 
 (crux/entity (crux/db node #inst "2017-11") :timed2)
 ;;=> {:crux.db/id :timed2, :value 10}
 ```
-like `:crux.tx.put`, `:crux.tx/delete` do not have to take valid-time starts and ends
-if not the data will be deleted (invalidated) from now  
+Like `:crux.tx.put`, `:crux.tx/delete` do not have to take valid-time starts and ends.
+If not the data will be deleted (invalidated) from now.  
 
 ``` clojure 
 (crux/submit-tx node
@@ -166,16 +166,16 @@ if not the data will be deleted (invalidated) from now
 (crux/entity (crux/db node #inst "2019") :timed1)
 ;;=> {:crux.db/id :timed1, :value 10}
 ```
-### eviction
+### Eviction
 ``` clojure 
 ;; remove all historical versions of a document
 (crux/submit-tx node
                 [[:crux.tx/evict :one]])
 ```
-### conditional transactions
-one way to issue transaction only if certain condition is met is to use the `:crux.tx/match` operation
-it let you verify the value of a database document against a given value
-and issue some transactions only if those are equals  
+### Conditional transactions
+One way to issue transaction only if certain condition is met is to use the `:crux.tx/match` operation.
+It let you verify the value of a database document against a given value
+and issue some transactions only if those are equals.  
 
 ``` clojure 
 (crux/submit-tx node
@@ -193,7 +193,7 @@ and issue some transactions only if those are equals
 (crux/entity (crux/db node) :data1)
 ;;=> {:crux.db/id :data1, :myfield "mydata", :foo :bar}
 ```
-like previously seen operations, `crux.db/match` can take a time at which to issue the matching  
+Like previously seen operations, `crux.db/match` can take a time at which to issue the matching.  
 
 ``` clojure 
 (crux/submit-tx node
@@ -245,16 +245,16 @@ like previously seen operations, `crux.db/match` can take a time at which to iss
 (crux/entity (crux/db node) :bank-account)
 ;=> {:crux.db/id :bank-account, :dollars 39}
 ```
-### transaction functions
+### Transaction functions
 Transaction functions are user-supplied functions that run on the individual Crux nodes when a transaction is being ingested.
 They can take any number of parameters, and return normal transaction operations which are then indexed as above.
 If they return false or throw an exception, the whole transaction will roll back.  
 
-#### exemple 1
+#### Exemple 1
 A transaction function that add (or substract) a given amount on our fancy `:bank-account` document.  
 
-transaction functions are defined with our old friend `crux.tx/put`
-the given document has to have a `:crux.db/fn` key pointing to the function code (quoted)  
+Transaction functions are defined with our old friend `crux.tx/put`.
+The given document has to have a `:crux.db/fn` key pointing to the function code (quoted).  
 
 ``` clojure 
 (crux/submit-tx node
@@ -274,8 +274,8 @@ the given document has to have a `:crux.db/fn` key pointing to the function code
 
 (crux/entity (crux/db node) :bank-account)
 ```
-#### exemple 2
-a transaction function that can create a new document by merging existing/given ones  
+#### Exemple 2
+A transaction function that can create a new document by merging existing/given ones.  
 
 ``` clojure 
 (crux/submit-tx node
@@ -302,8 +302,8 @@ a transaction function that can create a new document by merging existing/given 
 (crux/entity (crux/db node) :m3)
 ;;=> {:crux.db/id :m3, :a 4, :b 2, :c 3, :d 5}
 ```
-#### exemple 3
-a transaction function that let you extend your document with new key (semantically similar to clojure's `assoc`)  
+#### Exemple 3
+A transaction function that let you extend your document with new key (semantically similar to clojure's `assoc`).  
 
 ``` clojure 
 (crux/submit-tx node
@@ -324,14 +324,14 @@ a transaction function that let you extend your document with new key (semantica
 (crux/entity (crux/db node) :ivan)
 ;;=> {:crux.db/id :ivan, :age 40, :genre :M}
 ```
-### speculative transactions
+### Speculative transactions
 ``` clojure 
 ;; with the `crux/with-tx` function, we are creating an enriched database value without persisting anything to the system
 (def speculative-db
   (crux/with-tx (crux/db node)
                 [[:crux.tx/put {:crux.db/id :speculative-doc1 :value 42}]]))
 ```
-we can chack that the added document does not exist in our real database  
+We can chack that the added document does not exist in our real database.  
 
 ``` clojure 
 (crux/entity (crux/db node)
@@ -361,8 +361,8 @@ we can chack that the added document does not exist in our real database
             [crux-starter.p00_setup :refer [node]]
             [crux-starter.sugar :refer [puts q]]))
 ```
-### data
-putting some data to play with in the database  
+### Data
+Putting some data to play with in the database:  
 
 ``` clojure 
 (puts
@@ -424,7 +424,7 @@ putting some data to play with in the database
 
   )
 ```
-### basics
+### Basics
 ``` clojure 
 ;; attribute existence
 ;; find every documents that have a `:father` attribute
@@ -454,7 +454,7 @@ putting some data to play with in the database
      :where [[p :genre :M]]
      :full-results? true})
 ```
-### predicates
+### Predicates
 ``` clojure 
 ;; finds all adults
 (q '{:find [p]
@@ -480,7 +480,7 @@ putting some data to play with in the database
              [q :age qa]
              [(/ pa 2) qa]]})
 ```
-### logic connectors
+### Logic connectors
 ``` clojure 
 ;; or
 (q '{:find [x]
@@ -499,10 +499,10 @@ putting some data to play with in the database
                       (or [(= age 12)]
                           [(> age 19)])))]})
 ```
-### rules
-rules let you abstract clauses and create a more readable language for your queries
-for instance we will create a `parent` rule wich describe a parent relationship between its two arguments
-`(parent a b)` means that `a` is a `parent` of `b` (either father or mother)  
+### Rules
+Rules let you abstract clauses and create a more readable language for your queries.
+For instance we will create a `parent` rule wich describe a parent relationship between its two arguments
+`(parent a b)` means that `a` is a `parent` of `b` (either father or mother).  
 
 ``` clojure 
 (q '{:find [a b]
@@ -512,8 +512,8 @@ for instance we will create a `parent` rule wich describe a parent relationship 
      :where [(parent a b)]
      })
 ```
-rules are also a great way to express traversal relationships
-here we will define a `anccestor` rule  
+Rules are also a great way to express traversal relationships.
+Here we will define a `anccestor` rule  
 
 ``` clojure 
 (q '{:find [x]

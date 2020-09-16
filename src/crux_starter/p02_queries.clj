@@ -3,10 +3,10 @@
             [crux-starter.p00_setup :refer [node]]
             [crux-starter.sugar :refer [puts q]]))
 
-;; data
+;; Data
 ;; ---------------------------------------------------------------------------------------------------------------------
 
-;; putting some data to play with in the database
+;; Putting some data to play with in the database:
 
 (puts
 
@@ -67,7 +67,7 @@
 
   )
 
-;; basics
+;; Basics
 ;; ---------------------------------------------------------------------------------------------------------------------
 
 ;; attribute existence
@@ -98,7 +98,7 @@
      :where [[p :genre :M]]
      :full-results? true})
 
-;; predicates
+;; Predicates
 ;; ---------------------------------------------------------------------------------------------------------------------
 
 ;; finds all adults
@@ -125,7 +125,7 @@
              [q :age qa]
              [(/ pa 2) qa]]})
 
-;; logic connectors
+;; Logic connectors
 ;; ---------------------------------------------------------------------------------------------------------------------
 
 ;; or
@@ -145,12 +145,12 @@
                       (or [(= age 12)]
                           [(> age 19)])))]})
 
-;; rules
+;; Rules
 ;; ---------------------------------------------------------------------------------------------------------------------
 
-;; rules let you abstract clauses and create a more readable language for your queries
-;; for instance we will create a `parent` rule wich describe a parent relationship between its two arguments
-;; `(parent a b)` means that `a` is a `parent` of `b` (either father or mother)
+;; Rules let you abstract clauses and create a more readable language for your queries.
+;; For instance we will create a `parent` rule wich describe a parent relationship between its two arguments
+;; `(parent a b)` means that `a` is a `parent` of `b` (either father or mother).
 
 (q '{:find [a b]
      ;; introducing the parent rule
@@ -159,8 +159,8 @@
      :where [(parent a b)]
      })
 
-;; rules are also a great way to express traversal relationships
-;; here we will define a `anccestor` rule
+;; Rules are also a great way to express traversal relationships.
+;; Here we will define a `anccestor` rule
 
 (q '{:find [x]
      ;; we define ancestor in terms of parent
