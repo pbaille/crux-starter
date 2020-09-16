@@ -16,7 +16,7 @@ we can transact it to the database like this
 (crux/submit-tx node
                 [[:crux.tx/put data1]])
 ```
-the simplest way to retrieve it is to use crux/entity
+the simplest way to retrieve it is to use `crux/entity`
 ``` clojure 
 (crux/entity (crux/db node) :data1)
 ;;=> {:crux.db/id :data1, :myfield "mydata"}
@@ -26,7 +26,7 @@ if we are interested in retrieving its value at a given time we can feed it a se
 ``` clojure 
 (crux/db node #inst "2000") ;; returns the value of the database as in the beginning of the year 2000
 ```
-as we can check our previously trasacted :data1 document does not yet exists in 2000
+as we can check our previously trasacted `:data1` document does not yet exists in 2000
 ``` clojure 
 (crux/entity (crux/db node #inst "2000") :data1) ;;=> nil
 ```
@@ -183,7 +183,8 @@ like previously seen operations, `crux.db/match` can take a time at which to iss
 Transaction functions are user-supplied functions that run on the individual Crux nodes when a transaction is being ingested.
 They can take any number of parameters, and return normal transaction operations which are then indexed as above.
 If they return false or throw an exception, the whole transaction will roll back.
-the first exemple is a transaction function that add (or substract) a given amount on our fancy `:bank-account` document
+exemple 1 ---
+A transaction function that add (or substract) a given amount on our fancy `:bank-account` document.
 transaction functions are defined with our old friend `crux.tx/put`
 the given document has to have a `:crux.db/fn` key pointing to the function code (quoted)
 ``` clojure 
@@ -204,7 +205,7 @@ the given document has to have a `:crux.db/fn` key pointing to the function code
 
 (crux/entity (crux/db node) :bank-account)
 ```
-exemple 2
+exemple 2 ----
 a transaction function that can create a new document by merging existing/given ones
 ``` clojure 
 (crux/submit-tx node
@@ -231,7 +232,7 @@ a transaction function that can create a new document by merging existing/given 
 (crux/entity (crux/db node) :m3)
 ;;=> {:crux.db/id :m3, :a 4, :b 2, :c 3, :d 5}
 ```
-exemple 3
+exemple 3 ---
 a transaction function that let you extend your document with new key (semantically similar to clojure's `assoc`)
 ``` clojure 
 (crux/submit-tx node

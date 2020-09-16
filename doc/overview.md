@@ -1,10 +1,10 @@
 Crux is a database developped by **[Juxt](https://juxt.pro/)**. It has been available as a public alpha since april 2019.
 
-At first glance it looks a bit like an open sourced Datomic, but without schemas and with a slightly different temporal model.
+At first glance it looks a bit like an open sourced [Datomic](https://www.datomic.com/), but without schemas and with a slightly different temporal model.
 
 ## Bitemporality
 
-While Datomic is indexing datums along a single time axis based on transaction-time (the point in time where data was transacted into the database), Crux uses a bitemporal approach, indexing datums along two axis:
+While Datomic is indexing datums along a single time axis based on **transaction-time** (the point in time where data was transacted into the database), Crux uses a bitemporal approach, indexing datums along two axis:
 
 - transaction time
 - valid time
