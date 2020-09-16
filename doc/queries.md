@@ -5,7 +5,8 @@
             [crux-starter.sugar :refer [puts q]]))
 ```
 ### data
-putting some data to play with in the database
+putting some data to play with in the database  
+
 ``` clojure 
 (puts
 
@@ -144,7 +145,8 @@ putting some data to play with in the database
 ### rules
 rules let you abstract clauses and create a more readable language for your queries
 for instance we will create a `parent` rule wich describe a parent relationship between its two arguments
-`(parent a b)` means that `a` is a `parent` of `b` (either father or mother)
+`(parent a b)` means that `a` is a `parent` of `b` (either father or mother)  
+
 ``` clojure 
 (q '{:find [a b]
      ;; introducing the parent rule
@@ -154,7 +156,8 @@ for instance we will create a `parent` rule wich describe a parent relationship 
      })
 ```
 rules are also a great way to express traversal relationships
-here we will define a `anccestor` rule
+here we will define a `anccestor` rule  
+
 ``` clojure 
 (q '{:find [x]
      ;; we define ancestor in terms of parent
@@ -196,7 +199,8 @@ here we will define a `anccestor` rule
 ### EQL projections
 Crux queries support a 'projection' syntax,
 allowing you to decouple specifying which entities you want from what data you’d like about those entities in your queries.
-Crux’s support is based on the excellent EDN Query Language (EQL) library.
+Crux’s support is based on the excellent EDN Query Language (EQL) library.  
+
 ``` clojure 
 (puts
   {:crux.db/id :lawyer, :profession/name "Lawyer"}

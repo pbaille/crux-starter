@@ -67,6 +67,13 @@
            [type (str/replace content #";+ " "")]))
        xs))
 
+(defn add-linebreaks [xs]
+  (map (fn [[type content :as block]]
+         (if (= type :text)
+           [:text (str content "  \n")]
+           block))
+       xs))
+
 (defn to-md [marked-blocks]
   (str/join "\n"
             (keep (fn [[t c]]
@@ -85,6 +92,7 @@
        (map marked-block)
        join-adjacent-code-blocks
        clean-text-blocks
+       add-linebreaks
        to-md
        (spit output)))
 

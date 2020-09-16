@@ -5,38 +5,46 @@
 ```
 ### putting data into the database
 crux valid documents are arbitrary nested edn maps
-the only requirement is the presence of a `:crux.db/id` key pointing to either a keyword or a map
-let's say that we have a clojure map that fulfill this requirement
+the only requirement is the presence of a `:crux.db/id` key pointing to either a keyword or a map  
+
+let's say that we have a clojure map that fulfill this requirement  
+
 ``` clojure 
 (def data1 {:crux.db/id :data1
             :myfield "mydata"})
 ```
-we can transact it to the database like this
+we can transact it to the database like this  
+
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/put data1]])
 ```
-the simplest way to retrieve it is to use `crux/entity`
+the simplest way to retrieve it is to use `crux/entity`  
+
 ``` clojure 
 (crux/entity (crux/db node) :data1)
 ;;=> {:crux.db/id :data1, :myfield "mydata"}
 ```
 the `crux/db` call is returning the current value of our database
-if we are interested in retrieving its value at a given time we can feed it a second argument
+if we are interested in retrieving its value at a given time we can feed it a second argument  
+
 ``` clojure 
 (crux/db node #inst "2000") ;; returns the value of the database as in the beginning of the year 2000
 ```
-as we can check our previously trasacted `:data1` document does not yet exists in 2000
+as we can check our previously trasacted `:data1` document does not yet exists in 2000  
+
 ``` clojure 
 (crux/entity (crux/db node #inst "2000") :data1) ;;=> nil
 ```
-`crux/submit-tx` can take several transactions
+`crux/submit-tx` can take several transactions  
+
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/put {:crux.db/id :data2 :foo {:arbitrary {:nested "map"}}}]
                  [:crux.tx/put {:crux.db/id :data3 :data 3}]])
 ```
-the `:crux.tx/put` operation is letting you specify the valid time frame of the given document
+the `:crux.tx/put` operation is letting you specify the valid time frame of the given document  
+
 ``` clojure 
 (crux/submit-tx node
                 [;; a document that is valid forever starting at the beginning of the year 2019
@@ -89,7 +97,8 @@ the `:crux.tx/put` operation is letting you specify the valid time frame of the 
 ;;=> {:crux.db/id :timed2, :value 10}
 ```
 like `:crux.tx.put`, `:crux.tx/delete` do not have to take valid-time starts and ends
-if not the data will be deleted (invalidated) from now
+if not the data will be deleted (invalidated) from now  
+
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/delete :timed1]])
@@ -111,7 +120,8 @@ if not the data will be deleted (invalidated) from now
 ### conditional transactions
 one way to issue transaction only if certain condition is met is to use the `:crux.tx/match` operation
 it let you verify the value of a database document against a given value
-and issue some transactions only if those are equals
+and issue some transactions only if those are equals  
+
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/match
@@ -128,7 +138,8 @@ and issue some transactions only if those are equals
 (crux/entity (crux/db node) :data1)
 ;;=> {:crux.db/id :data1, :myfield "mydata", :foo :bar}
 ```
-like previously seen operations, `crux.db/match` can take a time at which to issue the matching
+like previously seen operations, `crux.db/match` can take a time at which to issue the matching  
+
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/match
@@ -182,11 +193,14 @@ like previously seen operations, `crux.db/match` can take a time at which to iss
 ### transaction functions
 Transaction functions are user-supplied functions that run on the individual Crux nodes when a transaction is being ingested.
 They can take any number of parameters, and return normal transaction operations which are then indexed as above.
-If they return false or throw an exception, the whole transaction will roll back.
+If they return false or throw an exception, the whole transaction will roll back.  
+
 #### exemple 1
-A transaction function that add (or substract) a given amount on our fancy `:bank-account` document.
+A transaction function that add (or substract) a given amount on our fancy `:bank-account` document.  
+
 transaction functions are defined with our old friend `crux.tx/put`
-the given document has to have a `:crux.db/fn` key pointing to the function code (quoted)
+the given document has to have a `:crux.db/fn` key pointing to the function code (quoted)  
+
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/put {:crux.db/id :update-bank-account
@@ -206,7 +220,8 @@ the given document has to have a `:crux.db/fn` key pointing to the function code
 (crux/entity (crux/db node) :bank-account)
 ```
 #### exemple 2
-a transaction function that can create a new document by merging existing/given ones
+a transaction function that can create a new document by merging existing/given ones  
+
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/put {:crux.db/id :merge
@@ -233,7 +248,8 @@ a transaction function that can create a new document by merging existing/given 
 ;;=> {:crux.db/id :m3, :a 4, :b 2, :c 3, :d 5}
 ```
 #### exemple 3
-a transaction function that let you extend your document with new key (semantically similar to clojure's `assoc`)
+a transaction function that let you extend your document with new key (semantically similar to clojure's `assoc`)  
+
 ``` clojure 
 (crux/submit-tx node
                 [[:crux.tx/put {:crux.db/id :assoc
@@ -260,7 +276,8 @@ a transaction function that let you extend your document with new key (semantica
   (crux/with-tx (crux/db node)
                 [[:crux.tx/put {:crux.db/id :speculative-doc1 :value 42}]]))
 ```
-we can chack that the added document does not exist in our real database
+we can chack that the added document does not exist in our real database  
+
 ``` clojure 
 (crux/entity (crux/db node)
              :speculative-doc1)
@@ -278,3 +295,4 @@ we can chack that the added document does not exist in our real database
 ;=> #{[:speculative-doc1]}
 ```
 
+  
